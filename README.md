@@ -1,0 +1,1 @@
+# solr-cloud-basic-auth

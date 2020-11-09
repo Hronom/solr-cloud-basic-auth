@@ -1,0 +1,125 @@
+# Full guide here https://github.com/docker-solr/docker-solr/blob/master/Docker-FAQ.md#can-i-run-zookeeper-and-solr-clusters-under-docker
+# Inspired by example from here https://github.com/docker-solr/docker-solr/blob/master/docs/docker-networking.md
+version: '2.4'
+services:
+  solr1:
+    image: solr:8.6.3
+    hostname: solr1
+    ports:
+      - 8981:8983
+      - 18981:5005
+    environment:
+      - ZK_HOST=zoo1:2181,zoo2:2181,zoo3:2181
+      - ZK_CLIENT_TIMEOUT=15000
+      - SOLR_JAVA_MEM=-Xms512m -Xmx512m
+      - SOLR_TIMEZONE=UTC
+      - SOLR_OPTS=-Dsolr.environment=test -Dsolr.allowPaths=* -Dsolr.disable.shardsWhitelist=true -Djute.maxbuffer=50000000
+      - JAVA_TOOL_OPTIONS=-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005
+      - OOM=script
+    depends_on:
+      - zoo1
+      - zoo2
+      - zoo3
+
+  solr2:
+    image: solr:8.6.3
+    hostname: solr2
+    ports:
+      - 8982:8983
+      - 18982:5005
+    environment:
+      - ZK_HOST=zoo1:2181,zoo2:2181,zoo3:2181
+      - ZK_CLIENT_TIMEOUT=15000
+      - SOLR_JAVA_MEM=-Xms512m -Xmx512m
+      - SOLR_TIMEZONE=UTC
+      - SOLR_OPTS=-Dsolr.environment=test -Dsolr.allowPaths=* -Dsolr.disable.shardsWhitelist=true -Djute.maxbuffer=50000000
+      - JAVA_TOOL_OPTIONS=-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005
+      - OOM=script
+    depends_on:
+      - zoo1
+      - zoo2
+      - zoo3
+
+  solr3:
+    image: solr:8.6.3
+    hostname: solr3
+    ports:
+      - 8983:8983
+      - 18983:5005
+    environment:
+      - ZK_HOST=zoo1:2181,zoo2:2181,zoo3:2181
+      - ZK_CLIENT_TIMEOUT=15000
+      - SOLR_JAVA_MEM=-Xms512m -Xmx512m
+      - SOLR_TIMEZONE=UTC
+      - SOLR_OPTS=-Dsolr.environment=test -Dsolr.allowPaths=* -Dsolr.disable.shardsWhitelist=true -Djute.maxbuffer=50000000
+      - JAVA_TOOL_OPTIONS=-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005
+      - OOM=script
+    depends_on:
+      - zoo1
+      - zoo2
+      - zoo3
+
+  zoo1:
+    image: zookeeper:3.6.1
+    hostname: zoo1
+    ports:
+      - 2181:2181
+    environment:
+      - ZOO_MY_ID=1
+      - ZOO_SERVERS=server.1=zoo1:2888:3888;2181 server.2=zoo2:2888:3888;2181 server.3=zoo3:2888:3888;2181
+      - ZOO_4LW_COMMANDS_WHITELIST=mntr,conf,ruok
+      - ZOO_LOG4J_PROP=INFO,CONSOLE,ROLLINGFILE
+      - JVMFLAGS=-Djute.maxbuffer=50000000
+    ulimits:
+      nproc: 65535
+      nofile:
+        soft: 65535
+        hard: 65535
+    mem_limit: 750m
+    mem_swappiness: 0
+
+  zoo2:
+    image: zookeeper:3.6.1
+    hostname: zoo2
+    ports:
+      - 2182:2181
+    environment:
+      - ZOO_MY_ID=2
+      - ZOO_SERVERS=server.1=zoo1:2888:3888;2181 server.2=zoo2:2888:3888;2181 server.3=zoo3:2888:3888;2181
+      - ZOO_4LW_COMMANDS_WHITELIST=mntr,conf,ruok
+      - ZOO_LOG4J_PROP=INFO,CONSOLE,ROLLINGFILE
+      - JVMFLAGS=-Djute.maxbuffer=50000000
+    ulimits:
+      nproc: 65535
+      nofile:
+        soft: 65535
+        hard: 65535
+    mem_limit: 750m
+    mem_swappiness: 0
+
+  zoo3:
+    image: zookeeper:3.6.1
+    hostname: zoo3
+    ports:
+      - 2183:2181
+    environment:
+      - ZOO_MY_ID=3
+      - ZOO_SERVERS=server.1=zoo1:2888:3888;2181 server.2=zoo2:2888:3888;2181 server.3=zoo3:2888:3888;2181
+      - ZOO_4LW_COMMANDS_WHITELIST=mntr,conf,ruok
+      - ZOO_LOG4J_PROP=INFO,CONSOLE,ROLLINGFILE
+      - JVMFLAGS=-Djute.maxbuffer=50000000
+    ulimits:
+      nproc: 65535
+      nofile:
+        soft: 65535
+        hard: 65535
+    mem_limit: 750m
+    mem_swappiness: 0
+
+networks:
+  default:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 200.199.0.0/16
+          gateway: 200.199.0.1

@@ -7,7 +7,7 @@ docker-compsoe -f solr-cluster.yml up -d
 
 ### 2. Launch app
 ```
-com.github.hronom.solrcloudbasicauth.App.main
+com.github.hronom.solrcloudplaygroundcollapsing.SolrCloudPlaygroundCollapsingApp.main
 ```
 
 ### 3. Create collection in Admin UI based on `test` config-set

@@ -1,4 +1,4 @@
-package com.github.hronom.solrcloudbasicauth;
+package com.github.hronom.solrcloudplaygroundbasicauth;
 
 import org.apache.solr.client.solrj.impl.CloudSolrClient;
 import org.apache.solr.common.cloud.SolrZkClient;
@@ -11,7 +11,7 @@ import java.util.Optional;
 import static java.util.Arrays.asList;
 import static org.apache.solr.common.cloud.ZkConfigManager.UPLOAD_FILENAME_EXCLUDE_PATTERN;
 
-public class App {
+public class SolrCloudPlaygroundBasicAuthApp {
     public static void main(String[] args) throws IOException {
         try (CloudSolrClient cloudSolrClient =
                      new CloudSolrClient

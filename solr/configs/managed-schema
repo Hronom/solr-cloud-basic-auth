@@ -112,6 +112,10 @@
 
     <field name="id" type="string" indexed="true" stored="true" required="true" multiValued="false" />
     <!-- docValues are enabled by default for long type so we don't need to index the version field  -->
+    <field name="user_id" type="string" indexed="true" stored="true" docValues="true" required="true"/>
+
+    <field name="job_type" type="string" indexed="true" stored="true" docValues="true" multiValued="true" omitNorms="true"/>
+
     <field name="_version_" type="plong" indexed="false" stored="false"/>
 
     <!-- If you don't use child/nested documents, then you should remove the next two fields:  -->
